@@ -4,6 +4,8 @@ open ProbOfGen
 
 module BuildModel =
 
+    let private isZero (x : float) = System.Math.Abs x <= 0.00000001
+
     let private improveStateChangeProb (model : Model) (actions : int [])
                                         (a : float [,]) (b : float [,]) =
         let transitions = Array2D.init model.StateNum model.StateNum (fun iState jState ->
@@ -37,7 +39,7 @@ module BuildModel =
         let a = forward model actions
         let b = backward model actions
         let total = Seq.init stateNum (fun state -> a.[state, actions.Length - 1]) |> Seq.sum
-        if total < 0.00001 then
+        if total |> isZero then
             model
         else
             { model with
