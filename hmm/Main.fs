@@ -1,6 +1,8 @@
 ﻿namespace hmm
 
-open HMM
+open RandomModel
+open ProbOfGen
+open BuildModel
 
 module Main =
 
@@ -12,7 +14,7 @@ module Main =
             {   StateNum = 5
                 ActionNum = 4
                 StartProb = [|0.2; 0.2; 0.2; 0.2; 0.2|]
-                StateChangeProb = array2D [ [0.2; 0.2; 0.2; 0.2; 0.2]
+                StateChangeProb = array2D [ [0.2; 0.1; 0.3; 0.2; 0.2]
                                             [0.2; 0.2; 0.2; 0.2; 0.2]
                                             [0.2; 0.2; 0.2; 0.2; 0.2]
                                             [0.2; 0.2; 0.2; 0.2; 0.2]
@@ -28,17 +30,16 @@ module Main =
         let iterationNum = 100
         let targetProb = 0.8
 
-        hr ()
         printfn "INIT MODEL:"
-        printfn "%A" initModel
-        printfn "INIT PROB: %f" (probOfGenerating initModel actions)
+        printModel initModel
+        printfn "INIT PROB: %f" (probOfGen initModel actions)
 
         hr ()
         let model = buildModel initModel actions iterationNum targetProb (fun i model ->
-            printfn "Iteration %d. Improved prob = %f" i (probOfGenerating model actions))
+            printfn "Iteration %d. Improved prob: %f" i (probOfGen model actions))
 
         hr ()
         printfn "RESULT MODEL:"
-        printfn "%A" model
+        printModel model
 
         0
